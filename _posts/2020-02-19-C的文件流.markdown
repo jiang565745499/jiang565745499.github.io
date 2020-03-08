@@ -1,0 +1,109 @@
+---
+title: C语言文件流
+tags: C
+article_header:
+  type: cover
+  image:
+    src: /screenshot.jpg
+---
+
+
+
+在ANSI C中，对文件的操纵分为2种方式
+
+一.流式文件操作
+
+二.I/O文件操作
+
+
+
+## 流式文件操作
+
+这种方式的文件操作有一个重要的结构FILE，FILE在stdio.h中定义如下：　　以下是引用片段：
+
+```
+typedef struct { 
+　　int level;  
+　　unsigned flags;  
+　　char fd;  
+　　unsigned char hold;  
+　　int bsize;  
+　　unsigned char _FAR *buffer;  
+　　unsigned char _FAR *curp;  
+　　unsigned istemp;  
+　　short token;  
+　} FILE; 
+```
+
+　　FILE这个结构包含了文件操作的基本属性，对文件的操作都要通过这个结构的指针来进行，此种文件操作常用的函数如下，下面是这些函数的功能使用说明：
+
+#### fopen()
+
+功能：打开流
+
+原型是FILE *fopen(const char *filename,const char *mode)，fopen实现三个功能：为使用而打开一个流，把一个文件和此流相连接，给此流返回一个FILR指针。
+
+参数filename指向要打开的文件名，mode表示打开状态的字符串，其取值如下：
+
+l  "r" 以只读方式打开文件，如无文件出错
+
+l  "w" 以只写方式打开文件,如无文件生成新文件
+
+l  "a" 以追加方式打开文件,如无文件生成新文件
+
+l  "r+" 以读/写方式打开文件，如无文件出错
+
+l  "w+" 以读/写方式打开文件，如无文件生成新文件
+
+一个文件可以以文本模式或二进制模式打开，这两种的区别是：在文本模式中回车被当成一个字符'\n'，而二进制模式认为它是两个字符0x0D,0x0A;如果在文件中读到0x1B，文本模式会认为这是文件结束符，也就是二进制模型不会对文件进行处理，而文本方式会按一定的方式对数据作相应的转换。
+
+系统默认的是以文本模式打开，可以修改全部变量_fmode的值来修改这个设置，例如_fmode=O_TEXT;就设置默认打开方式为文本模式;而_fmode=O_BINARY;则设置默认打开方式是二进制模式。
+
+我们也可以在模式字符串中指定打开的模式，如"rb"表示以二进制模式打开只读文件，"w+t"或"wt+"表示以文本模式打开读/写文件。
+
+此函数返回一个FILE指针，所以申明一个FILE指针后不用初始化，而是用fopen()来返回一个指针并与一个特定的文件相连，如果成败，返回NULL
+
+
+
+#### fclose()
+
+功能：关闭流
+
+原型是int fclose(FILE *fp);如果成功，返回0,失败返回EOF。
+
+
+
+#### fputc()
+
+功能：向流中写入一个字符(只能输入单个字符)
+
+原型是int fputc(int c, FILE *stream); 成功返回这个字符,失败返回EOF。
+
+
+
+#### fgetc()
+
+功能：从流中读取一个字符
+
+原型是int fputc(FILE *stream); 成功返回这个字符,失败返回EOF。
+
+
+
+#### fseek()
+
+功能：定位到流中制定的位置
+
+原型是int fseek(FILE *stream, long offset, int whence);如果成功返回0，参数offset是移动的字符数，whence是移动的基准，取值是：
+
+符号常量     值     基准位置
+
+Ø  SEEK_SET 0 文件开头
+
+Ø  SEEK_CUR 1 当前读写的位置
+
+Ø  SEEK_END 2 文件尾部
+
+
+
+#### fputs()
+

@@ -1,0 +1,34 @@
+---
+title: NodeJs获取用户输入
+tags: NodeJs
+article_header:
+  type: cover
+  image:
+    src: /screenshot.jpg
+---
+
+```
+const readline = require('readline');
+
+function readSyncByRl(tips) {
+    tips = tips || '> ';
+ 
+    return new Promise((resolve) => {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+ 
+        rl.question(tips, (answer) => {
+            rl.close();
+            resolve(answer.trim());
+        });
+    });
+}
+ 
+readSyncByRl('T提示内容').then((res) => {
+//输出
+});
+
+```
+
